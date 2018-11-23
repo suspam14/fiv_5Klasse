@@ -1,0 +1,16 @@
+{
+  "name": "ue01",
+  "version": "1.0.0",
+  "description": "Erstes Java Programm",
+  "main": "main.js",
+  "scripts": {
+    "build": "echo \"not implemented yet\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Schuster",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^3.1.1"
+  }
+}
