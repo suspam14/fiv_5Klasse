@@ -3,6 +3,7 @@
 import * as path from 'path';
 // Externes Modul
 import * as express from 'express';
+import * as bodyParser from 'body-parser';
 
 export class Server {
     private _port: number;
@@ -13,6 +14,9 @@ export class Server {
         this._port = port;
         this._server = express();
         this._server.use('/public', express.static(assetspath));
+        this._server.use(bodyParser.json());
+        this._server.use(bodyParser.urlencoded());
+        this._server.post('login.html', (req, res, next) => this.handlePostLogin(req, res, next));
         this._server.get('/liste', (req, res, next) => this.handleGetListe(req, res, next));
         this._server.get('/image.png', (req, res, next) => this.handleSendImage(res));
     }
@@ -38,4 +42,10 @@ export class Server {
         const filePath = path.join(__dirname, '../assets', 'image.png');
         res.sendFile(filePath);
     }
+
+    private handlePostLogin(req: express.Request, res: express.Response,
+        next: express.NextFunction) {
+            debugger;
+            next();
+        }
 }

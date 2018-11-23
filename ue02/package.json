@@ -10,9 +10,11 @@
   "author": "Schuster",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.17.0",
     "@types/express": "^4.16.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
