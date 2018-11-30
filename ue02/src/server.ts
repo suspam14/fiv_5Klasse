@@ -13,10 +13,15 @@ export class Server {
         const assetspath = path.join(__dirname, '..', 'assets');
         this._port = port;
         this._server = express();
-        this._server.use('/public', express.static(assetspath));
+
+        this._server.set('views', path.join(__dirname, 'views'));
+        const engine = this._server.set('view engine', 'pug');
+        engine.locals.pretty = true;
+
+        this._server.use('/', express.static(assetspath));
         this._server.use(bodyParser.json());
         this._server.use(bodyParser.urlencoded());
-        this._server.post('login.html', (req, res, next) => this.handlePostLogin(req, res, next));
+        this._server.post('/login.html', (req, res, next) => this.handlePostLogin(req, res, next));
         this._server.get('/liste', (req, res, next) => this.handleGetListe(req, res, next));
         this._server.get('/image.png', (req, res, next) => this.handleSendImage(res));
     }
@@ -45,7 +50,12 @@ export class Server {
 
     private handlePostLogin(req: express.Request, res: express.Response,
         next: express.NextFunction) {
-            debugger;
+            if (req.body.email === 'test@test.at' &&
+            req.body.password === 'geheim') {
+                res.render('welcome.pug', {anrede: 'Herr', name: 'Rossi'});
+            } else {
+                res.status(404).send('404 Not Authorized');
+            }
             next();
         }
 }
