@@ -24,6 +24,7 @@ export class Server {
         this._server.post('/login.html', (req, res, next) => this.handlePostLogin(req, res, next));
         this._server.get('/liste', (req, res, next) => this.handleGetListe(req, res, next));
         this._server.get('/image.png', (req, res, next) => this.handleSendImage(res));
+        this._server.get('/welcome', (req, res, next) => this.handleGetWelcome(req, res, next));
     }
 
     public start () {
@@ -52,10 +53,15 @@ export class Server {
         next: express.NextFunction) {
             if (req.body.email === 'test@test.at' &&
             req.body.password === 'geheim') {
-                res.render('welcome.pug', {anrede: 'Herr', name: 'Rossi'});
+                res.redirect('/welcome');
             } else {
                 res.status(404).send('404 Not Authorized');
             }
             next();
+        }
+
+        private handleGetWelcome (req: express.Request, res: express.Response,
+            next: express.NextFunction) {
+            res.render('welcome.pug', {anrede: 'Herr', name: 'Rossi'});
         }
 }
