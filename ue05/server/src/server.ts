@@ -1,4 +1,3 @@
-
 import * as debugsx from 'debug-sx';
 const debug: debugsx.IDefaultLogger = debugsx.createDefaultLogger('server');
 
@@ -11,6 +10,8 @@ import * as cors from 'cors';
 import * as morgan from 'morgan';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as https from 'https';
+import * as cookieParser from 'cookie-parser';
 // import * as jwt from 'jsonwebtoken';
 
 import { handleError, RouterError, BadRequestError, AuthenticationError, NotFoundError } from './routers/router-error';
@@ -40,7 +41,7 @@ export class Server {
 
     private _express: express.Express;
     private _config: IServerConfig;
-    private _server: http.Server;
+    private _server: https.Server;
 
     private constructor (config?: IServerConfig) {
         config = config || nconf.get('server');
@@ -70,6 +71,14 @@ export class Server {
         }
         this._express.use(bodyParser.json());
         this._express.use(bodyParser.urlencoded({ extended: true }) );
+        this._express.use(cookieParser());
+
+        this._express.get('/user',(req, res) => {
+            const user = {
+                name: 'Manfred Steiner'
+            }
+            res.json(user);
+        });
 
         // this._express.post('/auth', (req, res, next) => Auth.Instance.handlePostAuth(req, res, next));
 
@@ -85,7 +94,9 @@ export class Server {
             (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => this.errorHandler(err, req, res, next)
         );
 
-        const server = http.createServer(this._express).listen(this._config.port, () => {
+        const credentials = {key: '/home/pi/.ssh/id_rsa', cert: '/home/pi/ue05/certificate/crt.crt'};
+
+        const server = https.createServer(credentials, this._express).listen(this._config.port, () => {
             debug.info('Server gestartet: http://localhost:%s', this._config.port);
         });
         server.on('connection', socket => {
@@ -123,6 +134,7 @@ export class Server {
         if (req.url === '/' || req.url === '/index.html' || req.url.startsWith('/app') ) {
             const indexFileName = path.join(__dirname, '../../ngx/dist/ngx/index.html');
             res.sendFile(indexFileName);
+            res.cookie('sessionId',1);
             return;
         }
         if (req.url === '/favicon.ico') {

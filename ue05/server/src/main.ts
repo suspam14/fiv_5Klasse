@@ -9,7 +9,7 @@ import * as git from './utils/git';
 process.on('unhandledRejection', (reason, p) => {
     const now = new Date();
     console.log(now.toLocaleDateString() + '/' + now.toLocaleTimeString() + ': unhandled rejection at: Promise', p, 'reason:', reason);
-    debugger;
+    // debugger;
 });
 
 
@@ -69,7 +69,7 @@ if (logfileConfig) {
 import { sprintf } from 'sprintf-js';
 import { Server } from './server';
 
-debugger;
+// debugger;
 doStartup();
 
 async function doStartup () {
